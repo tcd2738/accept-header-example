@@ -24,14 +24,39 @@
     }
   </style>
   <script>
-    const sendFetchRequest = (url, acceptedType) => {
 
+    const handleResponse = (response) => {
+      response.text().then((resText) => {
+        console.log(resText);
+
+        let contentType = response.headers.get('Content-Type');
+        console.log(contentType);
+      });
+    };
+
+    const sendFetchRequest = (url, acceptedType) => {
+      // const xhr = new XMLHttpRequest();
+      const options = {
+        method: 'GET',
+        headers: {
+          'Accept': acceptedType
+        },
+      };
+
+      let fetchPromise = fetch(url, options);
+      fetchPromise.then((response) => {
+        handleResponse(response);
+      });
     };
 
     const init = () => {
       const jsonButton = document.querySelector("#getCatsJSON");
       const xmlButton = document.querySelector("#getCatsXML");
 
+      const sendJson = () => sendFetchRequest('/cats', 'application/json');
+
+      jsonButton.addEventListener('click', sendJson);
+      xmlButton.addEventListener('click', () => sendFetchRequest('/cats', 'text/xml'));
     };
 
     window.onload = init;
