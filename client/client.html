@@ -27,10 +27,33 @@
 
     const handleResponse = (response) => {
       response.text().then((resText) => {
-        console.log(resText);
-
         let contentType = response.headers.get('Content-Type');
-        console.log(contentType);
+
+        const content = document.getElementById('content');
+        content.appendChild(document.createElement('hr'));
+
+        const h1 = document.createElement('h1');
+        const p = document.createElement('p');
+        const h2 = document.createElement('h2');
+        const rawData = document.createElement('p');
+
+        h2.textContent = contentType;
+        rawData.textContent = resText;
+
+        if (contentType === 'text/xml') {
+          let parsedResponse = new window.DOMParser().parseFromString(resText, 'text/xml');
+          h1.textContent = `Name: ${parsedResponse.querySelector('name').textContent}`;
+          p.textContent = `Age: ${parsedResponse.querySelector('age').textContent}`;
+        } else {
+          let parsedResponse = JSON.parse(resText);
+          h1.textContent = `Name: ${parsedResponse.name}`;
+          p.textContent = `Age: ${parsedResponse.age}`;
+        }
+
+        content.appendChild(h1);
+        content.appendChild(p);
+        content.appendChild(h2);
+        content.appendChild(rawData);
       });
     };
 

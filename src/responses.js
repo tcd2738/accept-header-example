@@ -18,6 +18,15 @@ const getCats = (request, response, acceptedTypes) => {
     age: 1000,
   };
 
+  if(acceptedTypes[0] === 'text/xml') {
+    let responseXML = '<response>';
+    responseXML += '<name>Jim</name>';
+    responseXML += '<age>1000</age>';
+    responseXML += '</response>';
+
+    return respond(request, response, responseXML, 'text/xml');
+  }
+
   // JSON = JavaScript Object Notation
   const catString = JSON.stringify(cat);
   return respond(request, response, catString, 'application/json');
